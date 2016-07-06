@@ -1,10 +1,15 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-var ChatBox = require('./ChatBox');
+import React from 'react';
+import {render} from 'react-dom';
+import { Router, Route, IndexRoute, Link, browserHistory } from 'react-router'
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import Main from './Main';
 
-ReactDOM.render(
-	<ChatBox />,
+injectTapEventPlugin();
 
-	document.getElementById('demo-chat-body')
-
-	);
+render(
+	<Router history={browserHistory}>
+		<Route path="/" component={Main}>
+		</Route>
+	</Router>, 
+    document.getElementById('app')
+    );

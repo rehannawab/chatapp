@@ -1,38 +1,16 @@
-var browserify = require('browserify');
-var gulp = require('gulp');
-var source = require('vinyl-source-stream');
+/*
+  gulpfile.js
+  ===========
+  Rather than manage one giant configuration file responsible
+  for creating multiple tasks, each task has been broken out into
+  its own file in gulp/tasks. Any files in that directory get
+  automatically required below.
+  To add a new task, simply add a new task file that directory.
+  gulp/tasks/default.js specifies the default set of tasks to run
+  when you run `gulp`.
+*/
 
-gulp.task('bundle', function() {
-	return browserify('src/App.js')
-		.transform('babelify', {presets: 'react'})
-		.bundle()
-		.pipe(source('bundle.js'))
-		.pipe(gulp.dest('static/'));
-});
+var requireDir = require('require-dir');
 
-gulp.task('watch', function() {
-
-	var b = browserify({
-			entries: ['src/App.js'],
-    		cache: {}, packageCache: {},
-    		plugin: ['watchify']
-		});
-
-	b.on('update', makeBundle);
-
-	function makeBundle(){
-		b.transform('babelify', {presets: 'react'})
-		.bundle()
-		.on('error', function(err) {console.error(err);})
-		.pipe(source('bundle.js'))
-		.pipe(gulp.dest('static/'));
-		console.log('Bundle successful');
-	}
-
-	makeBundle();
-
-	return b;
-
-});
-
-gulp.task('default', ['watch']);
+// Require all tasks in gulp/tasks, including subfolders
+requireDir('./gulp/tasks', { recurse: true });

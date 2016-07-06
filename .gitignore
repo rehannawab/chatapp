@@ -13,3 +13,9 @@ node_modules
 .npm
 .node_repl_history
 transform.sh
+old
+.eslintrc.json
+jsconfig.json
+.vscode
+scripts
+typings
