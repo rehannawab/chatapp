@@ -30,16 +30,16 @@ RoomSchema.statics.authenticateRoomConnection = function(roomName, password, cal
     this.model('Room').findOne({room: roomName}, function(err, room){
         if(err)
         {
-            callback(new Error("Room not found"), null);
+            callback({authenticated: false}, null);
         }
 
         if(password === room.password)
         {
-            callback(null, room);
+            callback({authenticated: true}, room);
         }
         else
         {
-            callback(new Error("Wrong password"), null);
+            callback({authenticated: false}, null);
         }
 
     })

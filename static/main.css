@@ -1,3 +1,7 @@
+html, body{
+  height: 100%;
+}
+
 html {
   font-family: 'Roboto', sans-serif;
 }
@@ -6,3 +10,39 @@ body {
   font-size: 13px;
   line-height: 20px;
 }
+
+.header
+{
+  height: 50px;
+}
+
+.chat-input{
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  height: 50px;
+  opacity: 0.5;
+}
+
+.chat-app{
+  height: 100%;
+}
+
+.contacts, .chat-window{
+  height: 100%;
+}
+
+.wrapper{
+  height: 100%;
+}
+
+.chat-box{
+  position: absolute;
+  bottom:50px;
+  top:0px;
+  left:0px;
+  right: 0px;
+  overflow: auto;
+}
+

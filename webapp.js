@@ -17,9 +17,12 @@ app.use('/static', express.static('static'));
 
 require('./models/Room');
 
-app.get('/', function(req, res) {
-	res.sendFile(__dirname + '/static/index.html');
+var rooms = require('./routes/rooms');
 
+app.use('/rooms', rooms);
+
+app.get('/*', function(req, res) {
+	res.sendFile(__dirname + '/static/index.html');
 });
 
 require('./socket').setup(io);

@@ -10,11 +10,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import ChatApp from './ChatApp';
 
-const muiTheme = getMuiTheme({
-  palette: {
-    primary1Color: teal600,
-  },
-});
+const muiTheme = getMuiTheme();
 
 class Main extends Component {
   constructor(props, context) {
@@ -27,7 +23,9 @@ class Main extends Component {
 
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        <ChatApp />
+        <ChatApp>
+          {this.props.children}
+        </ChatApp>
       </MuiThemeProvider>
     );
   }
