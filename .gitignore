@@ -19,3 +19,4 @@ jsconfig.json
 .vscode
 scripts
 typings
+static/bundle.js
