@@ -6,6 +6,8 @@ module.exports.setup = function(io)
 {
     io.on('connection', function(socket){
 
+    console.log("user joined");
+
     socket.on("messageFromClient", function(data){
         data.username = socket.username;
         socket.to(socket.room).broadcast.emit("messageFromServer", data);
@@ -25,9 +27,9 @@ module.exports.setup = function(io)
     socket.on("connectToRoom", function(roomName, password, username, callback){
 
         //authenticateConnection
-        Room.authenticateRoomConnection(roomName, password, function(err, room){
-            if(err){
-                return callback(err);
+        Room.authenticateRoomConnection(roomName, password, function(result, room){
+            if(!result.authenticated){
+                return callback(result);
             }
 
             //if authenticated add the user to the room
@@ -44,7 +46,7 @@ module.exports.setup = function(io)
                 }
             });
 
-            callback(null);
+            callback(result);
 
         })
         
@@ -57,7 +59,8 @@ module.exports.setup = function(io)
     socket.on("disconnect", function(){
 
         Room.findOne({room: socket.room}, function(err, room){
-            if(err) return console.log(err)
+            if(err) return console.log(err);
+            if(!room) return;
             room.removeUser({id: socket.id}, function(err){
                 if(err){
                     console.log(err);

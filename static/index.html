@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Material-UI Example</title>
+  <title>ChatApp!!</title>
   <meta name="description" content="Google's material design UI components built with React.">
 
   <!-- Use minimum-scale=1 to enable GPU rasterization -->
@@ -12,12 +12,15 @@
     name="viewport"
     content="width=device-width, initial-scale=1, user-scalable=0, maximum-scale=1, minimum-scale=1"
   >
+  <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
 
   <link rel="stylesheet" type="text/css" href="/static/main.css">
 </head>
 
-<body style="margin:0; padding:0">
-  <div id="app"></div>
+<body style="margin:0; padding:0; height: 100%">
+  <div id="app" style="height: 100%;">
+    
+  </div>
 
   <!-- This script adds the Roboto font to our project. For more detail go to this site:  http://www.google.com/fonts#UsePlace:use/Collection:Roboto:400,300,500 -->
   <script>
@@ -34,6 +37,13 @@
     })();
   </script>
   <script src="/static/bundle.js"></script>
+  <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io();
+  </script>
+
 </body>
 
 </html>
