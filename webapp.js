@@ -12,8 +12,8 @@ var io = require('socket.io')(http);
 app.use(bodyParser.json());
 app.use('/static', express.static('static'));
 
-// var url = 'mongodb://localhost:27017/chatapp';
-// mongoose.connect(url);
+var url = 'mongodb://localhost:27017/chatapp';
+mongoose.connect(url);
 
 require('./models/Room');
 

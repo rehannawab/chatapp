@@ -3,8 +3,13 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 import Formsy from 'formsy-react';
 import {FormsyText} from 'formsy-material-ui/lib';
+import {browserHistory} from 'react-router';
+
+var rp = require('request-promise');
 
 var $ = require('jquery');
+
+var config = require('./config');
 
 class JoinerForm extends Component {
 
@@ -37,38 +42,55 @@ class JoinerForm extends Component {
 
     validSubmit(model, resetForm, invalidateForm){
         if(!this.state.create){
-            this.getRoom(model.room, function(data){
-                if(data.length === 0)
-                {
-                    invalidateForm({
-                        room: "Room does not exist"
-                    });
-                    return;
-                }
-                else{
+            this.getRoom(model.room)
+                .then(function(data){
                     socket.emit("connectToRoom", model.room, model.password, model.username, function(result){
                         if(!result.authenticated){
                             invalidateForm({
                                 password: "Invalid Password"
                             })
                         }
+                        else
+                        {
+                            localStorage.setItem('room', model.room);
+                            browserHistory.push('/');
+                        }
                     })
+                })
+                .catch(function(err){
+                    invalidateForm({
+                        room: "Room does not exist"
+                    });
+                });
+        }
+        else{
+            socket.emit("createRoom", model.room, model.password, function(err){
+                if(!err)
+                {
+                    socket.emit("connectToRoom", model.room, model.password, model.username, function(result){
+                        if(!result.authenticated){
+                            invalidateForm({
+                                password: "Invalid Password"
+                            })
+                        }
+                        else
+                        {
+                            localStorage.setItem('room', model.room);
+                            browserHistory.push('/');
+                        }
+                    });
                 }
             })
         }
-        else{
-            socket.emit("")
-        }
     }
 
-    getRoom(value, success){
-        $.ajax({
-            url: 'rooms',
-            dataType: 'json',
-            data: {room: value},
-            cache: false,
-            success: success
-        });
+    getRoom(value){
+        var options = {
+            uri: config.baseUrl + 'rooms/' + value,
+            json: true
+        }
+
+        return rp.get(options);
     }
 
     render() {
