@@ -1,44 +1,44 @@
 import React, {Component} from 'react';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
+import connectToStores from 'alt-utils/lib/connectToStores';
+import ChatStore from './stores/ChatStore';
+import ChatMessage from './ChatMessage';
 
-const styles={
-    cardHeader: {
-        paddingBottom: 0
-    },
-    card: {
-        "margin-top": 2
-    },
-    cardText: {
-        paddingTop : 0
-    }
-}
+//TODO: Remove this temporary count for key
+var count = 1;
 
-var name="Rehan"
+/**
+ * Chat Window which displays all chat messages
+ */
 class ChatWindow extends Component {
+
+    /**
+     * Returns chat stores for use in alt-utils connectToStores
+     */
+    static getStores() {
+        return [ChatStore];
+    }
+
+    /**
+     * Returns props from stores for use in alt-utils connectToStores
+     */ 
+    static getPropsFromStores() {
+        return ChatStore.getState();
+    }
+
     render() {
+        let messages = this.props.messages.map(function(message) {
+            return (<ChatMessage
+                        key={count++}
+                        message={message}
+                    />)
+        })
         return (
             <div>
-                <Card style={styles.card}>
-                    <CardHeader
-                        title="Rehan"
-                        style={styles.cardHeader}
-                    />
-                    <CardText style={styles.cardText}>
-                        Hello world
-                    </CardText>
-                </Card>
-                <Card style={styles.card}>
-                    <CardHeader
-                        title="Rehan"
-                        style={styles.cardHeader}
-                    />
-                    <CardText style={styles.cardText}>
-                        Hello world
-                    </CardText>
-                </Card>
+                {messages}
             </div>
         );
     }
 }
 
-export default ChatWindow;
+//Decorate with connectToStores from alt-utils
+export default connectToStores(ChatWindow);

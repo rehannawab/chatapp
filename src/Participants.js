@@ -5,7 +5,20 @@ const style = {
     width: 250
 }
 
+/**
+ * Component which will display all Participants of the chat
+ * 
+ * @class Participants
+ * @extends {Component}
+ */
 class Participants extends Component {
+    /**
+     * 
+     * 
+     * @returns
+     * 
+     * @memberOf Participants
+     */
     render() {
         return (
                 <Drawer
