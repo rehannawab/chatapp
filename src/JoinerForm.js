@@ -5,6 +5,8 @@ import Formsy from 'formsy-react';
 import {FormsyText} from 'formsy-material-ui/lib';
 import {browserHistory} from 'react-router';
 
+import {connectToRoom, createRoom} from './socket/Socket';
+
 var rp = require('request-promise');
 
 var $ = require('jquery');
@@ -35,11 +37,11 @@ class JoinerForm extends Component {
         this.getRoom = this.getRoom.bind(this);
         this.onCreateCheck = this.onCreateCheck.bind(this);
         this.validSubmit = this.validSubmit.bind(this);
+        this.connectToRoom = this.connectToRoom.bind(this)
     }
 
     /**
      * When create checkbox is checked
-     * TODO: Remove server call. All validations will be performed on submit
      * @param {any} e
      * @param {any} create
      * 
@@ -49,16 +51,6 @@ class JoinerForm extends Component {
         this.setState({
             create: create
         });
-        if(!create)
-        {
-            this.getRoom();
-        }
-        else
-        {
-            this.refs.form.updateInputsWithError({
-                room: ""
-            })
-        }
     }
 
     /**
@@ -72,47 +64,74 @@ class JoinerForm extends Component {
      * @memberOf JoinerForm
      */
     validSubmit(model, resetForm, invalidateForm){
-        if(!this.state.create){
-            this.getRoom(model.room)
-                .then(function(data){
-                    socket.emit("connectToRoom", model.room, model.password, model.username, function(result){
-                        if(!result.authenticated){
-                            invalidateForm({
-                                password: "Invalid Password"
-                            })
-                        }
-                        else
-                        {
-                            localStorage.setItem('room', model.room);
-                            browserHistory.push('/');
-                        }
-                    })
-                })
-                .catch(function(err){
-                    invalidateForm({
-                        room: "Room does not exist"
-                    });
-                });
-        }
-        else{
-            socket.emit("createRoom", model.room, model.password, function(err){
-                if(!err)
+
+        //First, try and get the room
+        this.getRoom(model.room)
+            
+            //if room exists
+            .then(data => {
+                //connect to the room
+                this.connectToRoom(model.room, model.password, model.username);
+            })
+
+            //if room doesn't exist
+
+            .catch(err => {
+                //check 404 code
+                if(err.statusCode === 404)
                 {
-                    socket.emit("connectToRoom", model.room, model.password, model.username, function(result){
-                        if(!result.authenticated){
-                            invalidateForm({
-                                password: "Invalid Password"
-                            })
-                        }
-                        else
-                        {
-                            localStorage.setItem('room', model.room);
-                            browserHistory.push('/');
-                        }
-                    });
+                    //OK, room does not exist
+
+                    //sould we create the room?
+                    if(this.state.create)
+                    {
+                        //yes, create the room
+                        createRoom(model.room, model.password)
+                            .subscribe(function(){
+                                //and then connect to it
+                                this.connectToRoom(model.room, model.password, model.username);
+                            }.bind(this));
+                    }
+                    else
+                    {
+                        //Nah, don't create the room
+                        invalidateForm({
+                            room: "Room does not exist"
+                        });
+                    }
+                }
+                //some other error
+                else
+                {
+                    alert("Oops, something went wrong!");
                 }
             })
-        }
+    }
+
+    /**
+     * Connect to Room
+     * 
+     * @param {any} room
+     * @param {any} password
+     * @param {any} username
+     * @param {any} invalidateForm
+     * 
+     * @memberOf JoinerForm
+     */
+    connectToRoom(room, password, username, invalidateForm){
+        connectToRoom(room, password, username)
+            .subscribe((result) => {
+                if(!result.authenticated){
+                    invalidateForm({
+                        password: "Invalid Password"
+                    })
+                }
+                else
+                {
+                    localStorage.setItem('room', room);
+                    browserHistory.push('/');
+                }
+            })
     }
 
     /**
