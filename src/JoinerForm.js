@@ -5,7 +5,7 @@ import Formsy from 'formsy-react';
 import {FormsyText} from 'formsy-material-ui/lib';
 import {browserHistory} from 'react-router';
 
-import {connectToRoom, createRoom} from './socket/Socket';
+import Socket from './socket/Socket';
 
 var rp = require('request-promise');
 
@@ -86,7 +86,7 @@ class JoinerForm extends Component {
                     if(this.state.create)
                     {
                         //yes, create the room
-                        createRoom(model.room, model.password)
+                        Socket.createRoom(model.room, model.password)
                             .subscribe(function(){
                                 //and then connect to it
                                 this.connectToRoom(model.room, model.password, model.username);
@@ -119,7 +119,7 @@ class JoinerForm extends Component {
      * @memberOf JoinerForm
      */
     connectToRoom(room, password, username, invalidateForm){
-        connectToRoom(room, password, username)
+        Socket.connectToRoom(room, password, username)
             .subscribe((result) => {
                 if(!result.authenticated){
                     invalidateForm({
@@ -144,7 +144,7 @@ class JoinerForm extends Component {
      */
     getRoom(value){
         var options = {
-            uri: config.baseUrl + 'rooms/' + value,
+            uri: config.baseUrl +'rooms/' + value,
             json: true
         }
 

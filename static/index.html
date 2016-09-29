@@ -21,7 +21,10 @@
   <div id="app" style="height: 100%;">
     
   </div>
-
+  <script src="/socket.io/socket.io.js"></script>
+    <script>
+    var socket = io();
+  </script>
   <!-- This script adds the Roboto font to our project. For more detail go to this site:  http://www.google.com/fonts#UsePlace:use/Collection:Roboto:400,300,500 -->
   <script>
     var WebFontConfig = {
@@ -39,10 +42,8 @@
   <script src="/static/bundle.js"></script>
   <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    var socket = io();
-  </script>
+  
+  
 
 </body>
 
